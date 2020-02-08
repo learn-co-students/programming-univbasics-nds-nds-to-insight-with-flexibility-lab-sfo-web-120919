@@ -1,6 +1,6 @@
 # Provided, don't edit
 require 'directors_database'
-
+require 'pp'
 # A method we're giving you. This "flattens"  Arrays of Arrays so: [[1,2],
 # [3,4,5], [6]] => [1,2,3,4,5,6].
 
@@ -21,7 +21,7 @@ def flatten_a_o_a(aoa)
 end
 
 def movie_with_director_name(director_name, movie_data)
-  { 
+  {
     :title => movie_data[:title],
     :worldwide_gross => movie_data[:worldwide_gross],
     :release_year => movie_data[:release_year],
@@ -34,6 +34,15 @@ end
 # Your code after this point
 
 def movies_with_director_key(name, movies_collection)
+  result  = []
+    movies_collection.each do |movie|
+      result << movie_with_director_name(name, movie)
+
+  end
+
+  return result
+
+
   # GOAL: For each Hash in an Array (movies_collection), provide a collection
   # of movies and a directors name to the movie_with_director_name method
   # and accumulate the returned Array of movies into a new Array that's
@@ -45,13 +54,30 @@ def movies_with_director_key(name, movies_collection)
   #
   # RETURN:
   #
-  # Array of Hashes where each Hash represents a movie; however, they should all have a
+  # Array of Hashes where each Hash repreasents a movie; however, they should all have a
   # :director_name key. This addition can be done by using the provided
   # movie_with_director_name method
 end
 
 
 def gross_per_studio(collection)
+  gross_total = {}
+
+    collection.each do |movie|
+
+      if !gross_total[movie[:studio]]
+        gross_total[movie[:studio]] = movie[:worldwide_gross]
+      else
+        gross_total[movie[:studio]] += movie[:worldwide_gross]
+
+      end
+
+    end
+
+      return gross_total
+
+  end
+
   # GOAL: Given an Array of Hashes where each Hash represents a movie,
   # return a Hash that includes the total worldwide_gross of all the movies from
   # each studio.
@@ -66,6 +92,16 @@ def gross_per_studio(collection)
 end
 
 def movies_with_directors_set(source)
+  result = []
+
+  source.each do |dir|
+    name = dir[:name]
+    movie = dir[:movies]
+    result << movies_with_director_key(name, movie)
+
+  end
+
+  return result
   # GOAL: For each director, find their :movies Array and stick it in a new Array
   #
   # INPUT:
